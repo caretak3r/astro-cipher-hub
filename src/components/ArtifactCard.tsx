@@ -1,6 +1,4 @@
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Card, Elevation, Button, Tag, Icon } from "@blueprintjs/core";
 import { Download, Shield, FileCheck, Package } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
@@ -37,7 +35,7 @@ export function ArtifactCard({ artifact }: { artifact: Artifact }) {
   };
 
   return (
-    <Card className="p-6 hover:shadow-lg transition-shadow border-border bg-card">
+    <Card elevation={Elevation.TWO} className="p-6 hover:shadow-lg transition-shadow">
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
@@ -48,9 +46,9 @@ export function ArtifactCard({ artifact }: { artifact: Artifact }) {
             <p className="text-sm text-muted-foreground">Version {artifact.version}</p>
           </div>
         </div>
-        <Badge variant={artifact.type === "helm" ? "default" : "secondary"}>
+        <Tag intent={artifact.type === "helm" ? "primary" : "success"} large>
           {artifact.type === "helm" ? "Helm Chart" : "Docker Image"}
-        </Badge>
+        </Tag>
       </div>
 
       <div className="space-y-2 mb-4">
@@ -69,19 +67,16 @@ export function ArtifactCard({ artifact }: { artifact: Artifact }) {
       </div>
 
       <div className="flex flex-wrap gap-2 mb-4">
-        <Badge variant="outline" className="text-xs">
-          <FileCheck className="w-3 h-3 mr-1" />
+        <Tag minimal icon={<FileCheck className="w-3 h-3" />}>
           SBOM
-        </Badge>
-        <Badge variant="outline" className="text-xs">
-          <Shield className="w-3 h-3 mr-1" />
+        </Tag>
+        <Tag minimal icon={<Shield className="w-3 h-3" />}>
           Signature
-        </Badge>
+        </Tag>
         {artifact.provenance && (
-          <Badge variant="outline" className="text-xs">
-            <Shield className="w-3 h-3 mr-1" />
+          <Tag minimal icon={<Shield className="w-3 h-3" />}>
             Provenance
-          </Badge>
+          </Tag>
         )}
       </div>
 
@@ -89,9 +84,11 @@ export function ArtifactCard({ artifact }: { artifact: Artifact }) {
         <Button 
           onClick={handleDownload}
           disabled={downloading}
-          className="flex-1"
+          intent="primary"
+          icon={<Download className="w-4 h-4" />}
+          fill
+          large
         >
-          <Download className="w-4 h-4 mr-2" />
           {downloading ? "Preparing..." : "Download Bundle"}
         </Button>
       </div>
