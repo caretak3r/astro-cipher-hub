@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { ArtifactCard } from "@/components/ArtifactCard";
 import { DeploymentStats } from "@/components/DeploymentStats";
+import { SecurityDashboard } from "@/components/SecurityDashboard";
+import { TransferStatus } from "@/components/TransferStatus";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,6 +21,13 @@ const mockArtifacts = [
     sbom: "included",
     provenance: "included",
     lastUpdated: "2 hours ago",
+    vulnerabilities: {
+      critical: 0,
+      high: 0,
+      medium: 1,
+      low: 2,
+    },
+    cosignVerified: true,
   },
   {
     id: "2",
@@ -30,6 +39,13 @@ const mockArtifacts = [
     signature: "verified",
     sbom: "included",
     lastUpdated: "5 hours ago",
+    vulnerabilities: {
+      critical: 0,
+      high: 1,
+      medium: 2,
+      low: 3,
+    },
+    cosignVerified: true,
   },
   {
     id: "3",
@@ -42,6 +58,13 @@ const mockArtifacts = [
     sbom: "included",
     provenance: "included",
     lastUpdated: "1 day ago",
+    vulnerabilities: {
+      critical: 0,
+      high: 0,
+      medium: 0,
+      low: 1,
+    },
+    cosignVerified: true,
   },
   {
     id: "4",
@@ -53,6 +76,13 @@ const mockArtifacts = [
     signature: "verified",
     sbom: "included",
     lastUpdated: "1 day ago",
+    vulnerabilities: {
+      critical: 0,
+      high: 1,
+      medium: 1,
+      low: 1,
+    },
+    cosignVerified: true,
   },
   {
     id: "5",
@@ -65,6 +95,13 @@ const mockArtifacts = [
     sbom: "included",
     provenance: "included",
     lastUpdated: "3 days ago",
+    vulnerabilities: {
+      critical: 0,
+      high: 0,
+      medium: 1,
+      low: 1,
+    },
+    cosignVerified: true,
   },
   {
     id: "6",
@@ -76,6 +113,13 @@ const mockArtifacts = [
     signature: "verified",
     sbom: "included",
     lastUpdated: "3 days ago",
+    vulnerabilities: {
+      critical: 0,
+      high: 0,
+      medium: 0,
+      low: 0,
+    },
+    cosignVerified: true,
   },
 ];
 
@@ -118,6 +162,8 @@ const Index = () => {
       {/* Main Content */}
       <main className="container mx-auto px-6 py-8">
         <DeploymentStats />
+        <SecurityDashboard />
+        <TransferStatus />
 
         {/* Search and Filters */}
         <div className="mb-6">

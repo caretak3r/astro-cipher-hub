@@ -1,9 +1,10 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Download, Shield, FileCheck, Package } from "lucide-react";
+import { Download, Shield, FileCheck, Package, AlertTriangle, Lock, Eye } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { SBOMDialog } from "@/components/SBOMDialog";
 
 interface Artifact {
   id: string;
@@ -16,11 +17,23 @@ interface Artifact {
   sbom: string;
   provenance?: string;
   lastUpdated: string;
+  vulnerabilities?: {
+    critical: number;
+    high: number;
+    medium: number;
+    low: number;
+  };
+  cosignVerified?: boolean;
 }
 
 export function ArtifactCard({ artifact }: { artifact: Artifact }) {
   const [downloading, setDownloading] = useState(false);
+  const [sbomOpen, setSbomOpen] = useState(false);
   const { toast } = useToast();
+
+  const totalVulnerabilities = artifact.vulnerabilities
+    ? Object.values(artifact.vulnerabilities).reduce((a, b) => a + b, 0)
+    : 0;
 
   const handleDownload = async () => {
     setDownloading(true);
@@ -69,18 +82,42 @@ export function ArtifactCard({ artifact }: { artifact: Artifact }) {
       </div>
 
       <div className="flex flex-wrap gap-2 mb-4">
-        <Badge variant="outline" className="text-xs">
+        <Badge 
+          variant="outline" 
+          className="text-xs bg-success/10 text-success border-success/20 cursor-pointer hover:bg-success/20"
+          onClick={() => setSbomOpen(true)}
+        >
           <FileCheck className="w-3 h-3 mr-1" />
           SBOM
         </Badge>
-        <Badge variant="outline" className="text-xs">
-          <Shield className="w-3 h-3 mr-1" />
-          Signature
+        <Badge 
+          variant="outline" 
+          className={`text-xs ${
+            artifact.cosignVerified
+              ? "bg-success/10 text-success border-success/20"
+              : "bg-muted text-muted-foreground"
+          }`}
+        >
+          <Lock className="w-3 h-3 mr-1" />
+          Cosign
         </Badge>
         {artifact.provenance && (
-          <Badge variant="outline" className="text-xs">
+          <Badge variant="outline" className="text-xs bg-success/10 text-success border-success/20">
             <Shield className="w-3 h-3 mr-1" />
             Provenance
+          </Badge>
+        )}
+        {totalVulnerabilities > 0 && (
+          <Badge 
+            variant="outline" 
+            className={`text-xs ${
+              artifact.vulnerabilities?.critical || artifact.vulnerabilities?.high
+                ? "bg-destructive/10 text-destructive border-destructive/20"
+                : "bg-warning/10 text-warning border-warning/20"
+            }`}
+          >
+            <AlertTriangle className="w-3 h-3 mr-1" />
+            {totalVulnerabilities} issues
           </Badge>
         )}
       </div>
@@ -94,11 +131,25 @@ export function ArtifactCard({ artifact }: { artifact: Artifact }) {
           <Download className="w-4 h-4 mr-2" />
           {downloading ? "Preparing..." : "Download Bundle"}
         </Button>
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={() => setSbomOpen(true)}
+          title="View SBOM"
+        >
+          <Eye className="w-4 h-4" />
+        </Button>
       </div>
 
       <p className="text-xs text-muted-foreground mt-3">
         Last updated: {artifact.lastUpdated}
       </p>
+
+      <SBOMDialog 
+        open={sbomOpen} 
+        onOpenChange={setSbomOpen}
+        artifact={{ name: artifact.name, version: artifact.version }}
+      />
     </Card>
   );
 }
