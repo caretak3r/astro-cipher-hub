@@ -6,9 +6,9 @@ import { Package, Shield, Database, Network, ChevronRight, Layers } from "lucide
 
 const apps = [
   {
-    id: "airgap-deploy",
-    name: "AirGap Deploy",
-    description: "Secure air-gapped deployment portal for managing artifacts, helm charts, and docker images",
+    id: "download-center",
+    name: "Download Center",
+    description: "Mirror and download artifacts from our registries for air-gapped deployments",
     icon: Package,
     to: "/airgap-deploy",
     gradient: "from-primary/20 to-primary/5",
