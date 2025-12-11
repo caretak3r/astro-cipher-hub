@@ -7,6 +7,9 @@ import { ThemeProvider } from "next-themes";
 import Home from "./pages/Home";
 import AirGapDeploy from "./pages/AirGapDeploy";
 import AirGapWizard from "./pages/AirGapWizard";
+import ArtifactExplorer from "./pages/ArtifactExplorer";
+import Vulnerabilities from "./pages/Vulnerabilities";
+import Compliance from "./pages/Compliance";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -17,12 +20,14 @@ const App = () => (
       <TooltipProvider>
         <Toaster />
         <Sonner />
-        <BrowserRouter basename="/astro-cipher-hub">
+        <BrowserRouter>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/airgap-deploy" element={<AirGapDeploy />} />
+            <Route path="/airgap-deploy/artifacts" element={<ArtifactExplorer />} />
+            <Route path="/airgap-deploy/vulnerabilities" element={<Vulnerabilities />} />
+            <Route path="/airgap-deploy/compliance" element={<Compliance />} />
             <Route path="/airgap-wizard" element={<AirGapWizard />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
